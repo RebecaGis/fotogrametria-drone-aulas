@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotogrametria com Drone - Aulas</title>
+    <style>
+        :root {
+            --primary: #51c97b;
+            --secondary: #cbfecb;
+            --accent1: #51cca2;
+            --accent2: #97fb98;
+            --accent3: #50fbaa;
+            --accent4: #3f9a6a;
+            --text-light: #333;
+            --text-dark: #f0f0f0;
+            --bg-light: #ffffff;
+            --bg-dark: #1a1a1a;
+            --card-light: #f5f5f5;
+            --card-dark: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        header {
+            background-color: var(--primary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode header {
+            background-color: var(--accent4);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            max-height: 60px;
+            margin-right: 15px;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background-color: var(--secondary);
+            border-radius: 10px;
+        }
+
+        body.dark-mode .intro {
+            background-color: var(--card-dark);
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode h1 {
+            color: var(--accent2);
+        }
+
+        h2 {
+            color: var(--accent4);
+            margin: 1.5rem 0 1rem;
+            border-bottom: 2px solid var(--accent1);
+            padding-bottom: 0.5rem;
+        }
+
+        body.dark-mode h2 {
+            color: var(--accent3);
+            border-bottom-color: var(--accent3);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .step-card {
+            background-color: var(--card-light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .step-card {
+            background-color: var(--card-dark);
+        }
+
+        .step-number {
+            display: inline-block;
+            background-color: var(--accent1);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .resources {
+            margin-top: 3rem;
+        }
+
+        .resource-section {
+            margin-bottom: 2rem;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .resource-card {
+            background-color: var(--card-light);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        body.dark-mode .resource-card {
+            background-color: var(--card-dark);
+        }
+
+        .resource-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        body.dark-mode .resource-icon {
+            color: var(--accent3);
+        }
+
+        .resource-link {
+            color: var(--text-light);
+            text-decoration: none;
+            flex-grow: 1;
+        }
+
+        body.dark-mode .resource-link {
+            color: var(--text-dark);
+        }
+
+        .resource-link:hover {
+            color: var(--accent1);
+        }
+
+        .add-resource-form {
+            background-color: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+
+        body.dark-mode .add-resource-form {
+            background-color: var(--card-dark);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--accent4);
+        }
+
+        body.dark-mode label {
+            color: var(--accent3);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        body.dark-mode input, 
+        body.dark-mode select, 
+        body.dark-mode textarea {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            border-color: #444;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        body.dark-mode button {
+            background-color: var(--accent4);
+        }
+
+        button:hover {
+            background-color: var(--accent4);
+        }
+
+        body.dark-mode button:hover {
+            background-color: var(--accent1);
+        }
+
+        .delete-resource {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 10px;
+            color: #ff4444;
+        }
+
+        .admin-panel {
+            background-color: var(--accent2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+
+        body.dark-mode .admin-panel {
+            background-color: var(--card-dark);
+        }
+
+        .admin-toggle {
+            background-color: var(--accent4);
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        body.dark-mode footer {
+            background-color: var(--accent4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: var(--accent4);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .notification.success {
+            background-color: var(--primary);
+            opacity: 1;
+        }
+
+        .notification.error {
+            background-color: #ff4444;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <!-- Substitua o src pelo caminho da sua logo -->
+            <img src="/logo.png" alt="Logo" class="logo">
+            <h1 class="header-title">Fotogrametria com Drone</h1>
+        </div>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+    </header>
+
+    <div class="container">
+        <section class="intro">
+            <h1>Aprenda Fotogrametria com Drone</h1>
+            <p>Este curso oferece um guia completo para dominar as técnicas de fotogrametria utilizando drones. Siga o passo a passo e aproveite os recursos disponíveis.</p>
+        </section>
+
+        <section class="steps">
+            <h2>Passo a Passo</h2>
+            <div class="steps-container">
+                <div class="step-card">
+                    <h3><span class="step-number">1</span> Planejamento do Voo</h3>
+                    <p>Defina a área de interesse, altitude de voo, sobreposição entre imagens e condições meteorológicas ideais.</p>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-number">2</span> Configuração do Equipamento</h3>
+                    <p>Verifique baterias, calibre sensores, configure câmera e prepare pontos de controle no terreno.</p>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-number">3</span> Execução do Voo</h3>
+                    <p>Realize o voo seguindo o planejamento, garantindo cobertura completa da área e qualidade das imagens.</p>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-number">4</span> Processamento das Imagens</h3>
+                    <p>Utilize software especializado para alinhar as imagens, gerar nuvem de pontos e criar modelos 3D.</p>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-number">5</span> Análise dos Resultados</h3>
+                    <p>Extraia medidas, gere ortomosaicos, modelos de superfície e realize análises quantitativas.</p>
+                </div>
+                <div class="step-card">
+                    <h3><span class="step-number">6</span> Validação e Ajustes</h3>
+                    <p>Compare resultados com dados de referência e faça ajustes necessários no processamento.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="resources">
+            <h2>Recursos de Aprendizado</h2>
+            
+            <div class="resource-section">
+                <h3>Vídeos</h3>
+                <div class="resource-grid" id="videos-container">
+                    <div class="loading">Carregando vídeos...</div>
+                </div>
+            </div>
+
+            <div class="resource-section">
+                <h3>PDFs</h3>
+                <div class="resource-grid" id="pdfs-container">
+                    <div class="loading">Carregando PDFs...</div>
+                </div>
+            </div>
+
+            <div class="resource-section">
+                <h3>Textos</h3>
+                <div class="resource-grid" id="texts-container">
+                    <div class="loading">Carregando textos...</div>
+                </div>
+            </div>
+
+            <!-- Painel Admin -->
+            <div class="admin-panel">
+                <h3>Painel do Professor</h3>
+                <p>Use este formulário para adicionar recursos que ficarão disponíveis para todos os alunos.</p>
+                
+                <form id="resourceForm">
+                    <div class="form-group">
+                        <label for="resourceType">Tipo de Recurso:</label>
+                        <select id="resourceType" required>
+                            <option value="">Selecione...</option>
+                            <option value="video">Vídeo</option>
+                            <option value="pdf">PDF</option>
+                            <option value="text">Texto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceTitle">Título:</label>
+                        <input type="text" id="resourceTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceUrl">URL/Link:</label>
+                        <input type="url" id="resourceUrl" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceDescription">Descrição (opcional):</label>
+                        <textarea id="resourceDescription" rows="3"></textarea>
+                    </div>
+                    <button type="submit">Adicionar Recurso</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Curso de Fotogrametria com Drone &copy; 2023</p>
+    </footer>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // URLs da API local
+        const API_BASE = '/api';
+        const GET_RESOURCES_URL = `${API_BASE}/resources`;
+        const ADD_RESOURCE_URL = `${API_BASE}/resources`;
+        const DELETE_RESOURCE_URL = `${API_BASE}/resources`;
+
+        // Alternar modo escuro/claro
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Verificar preferência salva
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+                themeToggle.textContent = '🌙';
+            }
+        });
+
+        // Gerenciar recursos
+        const resourceForm = document.getElementById('resourceForm');
+        const videosContainer = document.getElementById('videos-container');
+        const pdfsContainer = document.getElementById('pdfs-container');
+        const textsContainer = document.getElementById('texts-container');
+        const notification = document.getElementById('notification');
+        
+        // Mostrar notificação
+        function showNotification(message, type = 'success') {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
+        }
+        
+        // Buscar recursos do PostgreSQL
+        async function fetchResources() {
+            try {
+                const response = await fetch(GET_RESOURCES_URL);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    renderResources(data);
+                } else {
+                    throw new Error(data.error || 'Erro ao carregar recursos');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar recursos:', error);
+                videosContainer.innerHTML = '<div class="loading">Erro ao carregar recursos. Verifique se o servidor está rodando.</div>';
+                pdfsContainer.innerHTML = '';
+                textsContainer.innerHTML = '';
+            }
+        }
+        
+        // Adicionar recurso ao PostgreSQL
+        async function addResource(resource) {
+            try {
+                const response = await fetch(ADD_RESOURCE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(resource)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Recarregar recursos após adicionar
+                    fetchResources();
+                    return true;
+                } else {
+                    throw new Error(data.error || 'Erro ao adicionar recurso');
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar recurso:', error);
+                return false;
+            }
+        }
+        
+        // Deletar recurso
+        async function deleteResource(id) {
+            try {
+                const response = await fetch(`${DELETE_RESOURCE_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Recarregar recursos após deletar
+                    fetchResources();
+                    return true;
+                } else {
+                    throw new Error(data.error || 'Erro ao deletar recurso');
+                }
+            } catch (error) {
+                console.error('Erro ao deletar recurso:', error);
+                return false;
+            }
+        }
+        
+        // Renderizar recursos
+        function renderResources(resources) {
+            // Limpar containers
+            videosContainer.innerHTML = '';
+            pdfsContainer.innerHTML = '';
+            textsContainer.innerHTML = '';
+            
+            if (resources.length === 0) {
+                videosContainer.innerHTML = '<div class="loading">Nenhum vídeo disponível.</div>';
+                pdfsContainer.innerHTML = '<div class="loading">Nenhum PDF disponível.</div>';
+                textsContainer.innerHTML = '<div class="loading">Nenhum texto disponível.</div>';
+                return;
+            }
+            
+            // Adicionar recursos aos containers apropriados
+            resources.forEach(resource => {
+                const resourceCard = document.createElement('div');
+                resourceCard.className = 'resource-card';
+                
+                let icon = '';
+                if (resource.type === 'video') {
+                    icon = '🎬';
+                } else if (resource.type === 'pdf') {
+                    icon = '📄';
+                } else {
+                    icon = '📝';
+                }
+                
+                resourceCard.innerHTML = `
+                    <span class="resource-icon">${icon}</span>
+                    <a href="${resource.url}" target="_blank" class="resource-link">
+                        <strong>${resource.title}</strong>
+                        ${resource.description ? `<br><small>${resource.description}</small>` : ''}
+                    </a>
+                    <button class="delete-resource" data-id="${resource.id}">🗑️</button>
+                `;
+                
+                if (resource.type === 'video') {
+                    videosContainer.appendChild(resourceCard);
+                } else if (resource.type === 'pdf') {
+                    pdfsContainer.appendChild(resourceCard);
+                } else {
+                    textsContainer.appendChild(resourceCard);
+                }
+            });
+            
+            // Adicionar event listeners para botões de exclusão
+            document.querySelectorAll('.delete-resource').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    const success = await deleteResource(id);
+                    
+                    if (success) {
+                        showNotification('Recurso deletado com sucesso!');
+                    } else {
+                        showNotification('Erro ao deletar recurso', 'error');
+                    }
+                });
+            });
+        }
+        
+        // Adicionar novo recurso
+        resourceForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const type = document.getElementById('resourceType').value;
+            const title = document.getElementById('resourceTitle').value;
+            const url = document.getElementById('resourceUrl').value;
+            const description = document.getElementById('resourceDescription').value;
+            
+            const newResource = {
+                type,
+                title,
+                url,
+                description
+            };
+            
+            const success = await addResource(newResource);
+            
+            if (success) {
+                // Limpar formulário
+                resourceForm.reset();
+                showNotification('Recurso adicionado com sucesso!');
+            } else {
+                showNotification('Erro ao adicionar recurso', 'error');
+            }
+        });
+        
+        // Carregar recursos ao iniciar
+        fetchResources();
+    </script>
+</body>
+</html>
